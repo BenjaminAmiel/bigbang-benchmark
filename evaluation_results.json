@@ -1,0 +1,16 @@
+[
+  {
+    "question": "What is the answer to life, the universe and everything?",
+    "expected": "42",
+    "response": "The answer to life, the universe, and everything is 42, according to Douglas Adams' science fiction series \"The Hitchhiker's Guide to the Galaxy.\"",
+    "score": 1.0,
+    "correct": true
+  },
+  {
+    "question": "What is two plus two?",
+    "expected": "4",
+    "response": "Four",
+    "score": 1.0,
+    "correct": true
+  }
+]
