@@ -6,6 +6,7 @@ from openai import OpenAI
 st.set_page_config(page_title="Big Bang Benchmark – Compare Models", layout="wide")
 st.title("🧠 Big Bang Benchmark – Compare Two Models")
 
+# Clé API
 api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
 if api_key:
@@ -47,6 +48,5 @@ if api_key:
                     ).choices[0].message.content.strip()
 
                 st.markdown(f"**🔶 Réponse de {model_b} :**\n\n{response_b}")
-
 else:
     st.info("Veuillez entrer votre clé API pour démarrer.")
