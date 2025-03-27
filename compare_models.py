@@ -6,19 +6,21 @@ from openai import OpenAI
 st.set_page_config(page_title="Big Bang Benchmark – Compare Models", layout="wide")
 st.title("🧠 Big Bang Benchmark – Compare Two Models")
 
-# Clé API
+# API key input
 api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
 if api_key:
     st.success("Clé API chargée avec succès ✅")
     client = OpenAI(api_key=api_key)
 
+    # Model selectors
     col1, col2 = st.columns(2)
     with col1:
         model_a = st.selectbox("🤖 Modèle A", ["gpt-3.5-turbo", "gpt-4"])
     with col2:
         model_b = st.selectbox("🤖 Modèle B", ["gpt-3.5-turbo", "gpt-4"], index=1)
 
+    # Load dataset
     if os.path.exists("evaluation_results.json"):
         with open("evaluation_results.json") as f:
             dataset = json.load(f)
