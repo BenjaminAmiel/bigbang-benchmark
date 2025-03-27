@@ -1,18 +1,42 @@
 [
   {
-    "question": "What is the answer to life, the universe and everything?",
-    "answer": "42"
+    "question": "What is the speed of light in vacuum in m/s?",
+    "expected": "299792458"
   },
   {
-    "question": "What is two plus two?",
-    "answer": "4"
+    "question": "Who is considered the father of psychoanalysis?",
+    "expected": "Sigmund Freud"
   },
   {
-    "question": "Is water wet?",
-    "answer": "yes"
+    "question": "What is the chemical symbol for gold?",
+    "expected": "Au"
   },
   {
-    "question": "What color is the sky on a clear day?",
-    "answer": "blue"
+    "question": "What year did the Berlin Wall fall?",
+    "expected": "1989"
+  },
+  {
+    "question": "Solve for x: 2x + 3 = 7",
+    "expected": "2"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "expected": "Leonardo da Vinci"
+  },
+  {
+    "question": "What is the square root of 144?",
+    "expected": "12"
+  },
+  {
+    "question": "Is water a polar molecule?",
+    "expected": "yes"
+  },
+  {
+    "question": "What is the capital of Japan?",
+    "expected": "Tokyo"
+  },
+  {
+    "question": "What organ is responsible for pumping blood?",
+    "expected": "heart"
   }
 ]
