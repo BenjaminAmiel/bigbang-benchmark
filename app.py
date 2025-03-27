@@ -1,100 +1,88 @@
 import streamlit as st
-import openai
 import json
-import re
-import numpy as np
+import os
+import openai
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Interface Streamlit
+# --- 🔧 Fonction de normalisation ---
 def normalize(text):
     text = text.lower()
-    word_to_digit = {
+    replacements = {
         "zero": "0", "one": "1", "two": "2", "three": "3",
         "four": "4", "five": "5", "six": "6", "seven": "7",
         "eight": "8", "nine": "9"
     }
-    digit_to_word = {v: k for k, v in word_to_digit.items()}
-    for word, digit in word_to_digit.items():
+    for word, digit in replacements.items():
         text = text.replace(word, digit)
-    for digit, word in digit_to_word.items():
+    for digit, word in replacements.items():
         text = text.replace(digit, word)
-    return re.sub(r'[^a-z0-9]', '', text)
+    return ''.join(e for e in text if e.isalnum())
 
-def fixed_fake_embedding(text, length=20):
-    base = [ord(c) % 5 for c in text]
-    if len(base) < length:
-        base += [0] * (length - len(base))
-    else:
-        base = base[:length]
-    return np.array(base)
-
-def evaluate_openai_model(api_key, model_name, dataset):
-    openai.api_key = api_key
-    results = []
-    for item in dataset:
-        question = item["question"]
-        expected = item["answer"]
-        try:
-            response = openai.ChatCompletion.create(
-                model=model_name,
-                messages=[{"role": "user", "content": question}]
-            )
-            reply = response.choices[0].message.content.strip()
-        except Exception as e:
-            reply = f"Error: {e}"
-
-        norm_expected = normalize(expected)
-        norm_response = normalize(reply)
-
-        if norm_expected in norm_response:
-            score = 1.0
-        else:
-            emb_expected = fixed_fake_embedding(expected)
-            emb_response = fixed_fake_embedding(reply)
-            similarity = cosine_similarity([emb_expected], [emb_response])[0][0]
-            score = round(float(similarity), 4)
-
-        results.append({
-            "question": question,
-            "expected": expected,
-            "response": reply,
-            "score": score,
-            "correct": score >= 0.15
-        })
-    return results
-
-# Streamlit UI
+# --- 🚀 Interface Streamlit ---
 st.set_page_config(page_title="Big Bang Benchmark", layout="wide")
 st.title("🚀 Big Bang Benchmark")
 
+# --- 🔑 Clé API ---
 api_key = st.text_input("🔑 OpenAI API Key", type="password")
-model_name = st.selectbox("🤖 Choisir le modèle OpenAI", ["gpt-3.5-turbo", "gpt-4"]) 
 
+# --- 🤖 Sélection du modèle ---
+model_choice = st.selectbox("🤖 Choisir le modèle OpenAI", ["gpt-3.5-turbo", "gpt-4", "gpt-4o"])
+
+# --- ✅ Si clé API entrée ---
 if api_key:
     st.success("Clé chargée avec succès ✅")
+    openai.api_key = api_key
 
-    if st.button("Lancer le benchmark"):
-        with st.spinner("Évaluation en cours..."):
-            dataset = [
-                {"question": "What is the answer to life, the universe and everything?", "answer": "42"},
-                {"question": "What is two plus two?", "answer": "4"},
-                {"question": "Is water wet?", "answer": "Yes"},
-                {"question": "What color is the sky?", "answer": "Blue"},
-            ]
-            results = evaluate_openai_model(api_key, model_name, dataset)
-            st.success("Benchmark terminé ✅")
-            st.write("### Résultats")
-            st.dataframe(results)
+    # --- 📂 Charger le dataset ---
+    with open("dataset.json") as f:
+        dataset = json.load(f)
 
-else:
-    st.warning("Veuillez entrer une clé API pour continuer.")
-import json
+    # --- ⚙️ Fonction appel modèle ---
+    def gpt_model(prompt):
+        response = openai.ChatCompletion.create(
+            model=model_choice,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content.strip()
 
-# 📦 Bouton de téléchargement des résultats
-if results:
-    st.download_button(
-        label="📥 Télécharger les résultats",
-        data=json.dumps(results, indent=2),
-        file_name="evaluation_results.json",
-        mime="application/json"
-    )
+    # --- 📊 Evaluation ---
+    results = []
+    for item in dataset:
+        q, expected = item['question'], item['answer']
+        with st.spinner(f"⏳ Évaluation : {q}"):
+            response = gpt_model(q)
+            norm_expected = normalize(expected)
+            norm_response = normalize(response)
+            exact = norm_expected == norm_response
+
+            # Similarité cosinus
+            vectorizer = TfidfVectorizer().fit_transform([norm_expected, norm_response])
+            sim_score = cosine_similarity(vectorizer)[0, 1]
+
+            results.append({
+                "question": q,
+                "expected": expected,
+                "response": response,
+                "correct": exact,
+                "similarity": round(sim_score, 4)
+            })
+
+    st.success("Benchmark terminé ✅")
+
+    # --- 📄 Affichage ---
+    st.subheader("Résultats")
+    for idx, r in enumerate(results):
+        st.markdown(f"### 🧠 Question {idx + 1}")
+        st.markdown(f"**❓ Question** : {r['question']}")
+        st.markdown(f"**✅ Attendu** : {r['expected']}")
+        st.markdown(f"**💬 Réponse** : {r['response']}")
+        if r['correct']:
+            st.success("🎯 Correct")
+        else:
+            st.error("❌ Incorrect")
+            st.markdown(f"🔁 Similarity score: `{r['similarity']}`")
+
+    # --- 💾 Exporter les résultats ---
+    with open("evaluation_results.json", "w") as f:
+        json.dump(results, f, indent=2)
