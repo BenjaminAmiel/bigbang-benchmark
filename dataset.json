@@ -1,0 +1,18 @@
+[
+  {
+    "question": "What is the answer to life, the universe and everything?",
+    "answer": "42"
+  },
+  {
+    "question": "What is two plus two?",
+    "answer": "4"
+  },
+  {
+    "question": "Is water wet?",
+    "answer": "yes"
+  },
+  {
+    "question": "What color is the sky on a clear day?",
+    "answer": "blue"
+  }
+]
