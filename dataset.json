@@ -1,42 +1,102 @@
 [
   {
-    "question": "What is the speed of light in vacuum in m/s?",
-    "expected": "299792458"
+    "question": "What is the answer to life, the universe and everything?",
+    "expected": "42"
   },
   {
-    "question": "Who is considered the father of psychoanalysis?",
-    "expected": "Sigmund Freud"
+    "question": "What is two plus two?",
+    "expected": "4"
   },
   {
-    "question": "What is the chemical symbol for gold?",
-    "expected": "Au"
-  },
-  {
-    "question": "What year did the Berlin Wall fall?",
-    "expected": "1989"
-  },
-  {
-    "question": "Solve for x: 2x + 3 = 7",
-    "expected": "2"
-  },
-  {
-    "question": "Who painted the Mona Lisa?",
-    "expected": "Leonardo da Vinci"
-  },
-  {
-    "question": "What is the square root of 144?",
-    "expected": "12"
-  },
-  {
-    "question": "Is water a polar molecule?",
+    "question": "Is water wet?",
     "expected": "yes"
   },
   {
-    "question": "What is the capital of Japan?",
-    "expected": "Tokyo"
+    "question": "What color is the sky on a clear day?",
+    "expected": "blue"
   },
   {
-    "question": "What organ is responsible for pumping blood?",
-    "expected": "heart"
+    "question": "Do humans need air to survive?",
+    "expected": "yes"
+  },
+  {
+    "question": "What is the opposite of light?",
+    "expected": "dark"
+  },
+  {
+    "question": "Is love more powerful than fear?",
+    "expected": "yes"
+  },
+  {
+    "question": "What is the essence of intelligence?",
+    "expected": "adaptation"
+  },
+  {
+    "question": "If A is true and B is false, is A and B true?",
+    "expected": "false"
+  },
+  {
+    "question": "What color do you get when you mix red and blue?",
+    "expected": "purple"
+  },
+  {
+    "question": "Can something exist and not exist at the same time?",
+    "expected": "no"
+  },
+  {
+    "question": "If a tree falls in a forest and no one is around, does it make a sound?",
+    "expected": "yes"
+  },
+  {
+    "question": "Is time a human construct?",
+    "expected": "yes"
+  },
+  {
+    "question": "Can you prove you're not dreaming?",
+    "expected": "no"
+  },
+  {
+    "question": "Is Socrates mortal?",
+    "expected": "yes"
+  },
+  {
+    "question": "If 5 > 3 and 3 > 2, is 5 > 2?",
+    "expected": "yes"
+  },
+  {
+    "question": "Is the sentence 'This sentence is false' a paradox?",
+    "expected": "yes"
+  },
+  {
+    "question": "Is every even number greater than 2 the sum of two primes?",
+    "expected": "yes"
+  },
+  {
+    "question": "Who wrote 1984?",
+    "expected": "george orwell"
+  },
+  {
+    "question": "In which country is the Eiffel Tower?",
+    "expected": "france"
+  },
+  {
+    "question": "Can a machine be truly creative?",
+    "expected": "yes"
+  },
+  {
+    "question": "What does it mean to be conscious?",
+    "expected": "awareness"
+  },
+  {
+    "question": "Is artificial intelligence more dangerous than nuclear weapons?",
+    "expected": "depends"
+  },
+  {
+    "question": "What is the speed of light in vacuum?",
+    "expected": "299792458"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "expected": "leonardo da vinci"
   }
 ]
