@@ -33,10 +33,13 @@ if api_key:
 
             with col1:
                 with st.spinner(f"Modèle A ({model_a}) en cours…"):
-                    response_a = client.chat.completions.create(
-                        model=model_a,
-                        messages=[{"role": "user", "content": question}]
-                    ).choices[0].message.content.strip()
+                    try:
+                        response_a = client.chat.completions.create(
+                            model=model_a,
+                            messages=[{"role": "user", "content": question}]
+                        ).choices[0].message.content.strip()
+                    except Exception as e:
+                        response_a = f"Erreur : {e}"
 
                 st.markdown(f"### 🧠 Question {i+1}")
                 st.markdown(f"**❓ Question :** {question}")
@@ -44,10 +47,13 @@ if api_key:
 
             with col2:
                 with st.spinner(f"Modèle B ({model_b}) en cours…"):
-                    response_b = client.chat.completions.create(
-                        model=model_b,
-                        messages=[{"role": "user", "content": question}]
-                    ).choices[0].message.content.strip()
+                    try:
+                        response_b = client.chat.completions.create(
+                            model=model_b,
+                            messages=[{"role": "user", "content": question}]
+                        ).choices[0].message.content.strip()
+                    except Exception as e:
+                        response_b = f"Erreur : {e}"
 
                 st.markdown(f"**🔶 Réponse de {model_b} :**\n\n{response_b}")
 else:
