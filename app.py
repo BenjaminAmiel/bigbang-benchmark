@@ -88,3 +88,13 @@ if api_key:
 
 else:
     st.warning("Veuillez entrer une clé API pour continuer.")
+import json
+
+# 📦 Bouton de téléchargement des résultats
+if results:
+    st.download_button(
+        label="📥 Télécharger les résultats",
+        data=json.dumps(results, indent=2),
+        file_name="evaluation_results.json",
+        mime="application/json"
+    )
