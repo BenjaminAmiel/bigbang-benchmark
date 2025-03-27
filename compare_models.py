@@ -4,6 +4,7 @@ import os
 from openai import OpenAI
 
 st.set_page_config(page_title="Big Bang Benchmark – Compare Models", layout="wide")
+
 st.title("🧠 Big Bang Benchmark – Compare Two Models")
 
 # API key input
@@ -20,9 +21,9 @@ if api_key:
     with col2:
         model_b = st.selectbox("🤖 Modèle B", ["gpt-3.5-turbo", "gpt-4"], index=1)
 
-    # Load dataset
-    if os.path.exists("evaluation_results.json"):
-        with open("evaluation_results.json") as f:
+    # Load dataset.json (nouvelle base de données)
+    if os.path.exists("dataset.json"):
+        with open("dataset.json") as f:
             dataset = json.load(f)
 
         st.subheader("📊 Comparaison des réponses")
@@ -33,13 +34,10 @@ if api_key:
 
             with col1:
                 with st.spinner(f"Modèle A ({model_a}) en cours…"):
-                    try:
-                        response_a = client.chat.completions.create(
-                            model=model_a,
-                            messages=[{"role": "user", "content": question}]
-                        ).choices[0].message.content.strip()
-                    except Exception as e:
-                        response_a = f"Erreur : {e}"
+                    response_a = client.chat.completions.create(
+                        model=model_a,
+                        messages=[{"role": "user", "content": question}]
+                    ).choices[0].message.content.strip()
 
                 st.markdown(f"### 🧠 Question {i+1}")
                 st.markdown(f"**❓ Question :** {question}")
@@ -47,13 +45,10 @@ if api_key:
 
             with col2:
                 with st.spinner(f"Modèle B ({model_b}) en cours…"):
-                    try:
-                        response_b = client.chat.completions.create(
-                            model=model_b,
-                            messages=[{"role": "user", "content": question}]
-                        ).choices[0].message.content.strip()
-                    except Exception as e:
-                        response_b = f"Erreur : {e}"
+                    response_b = client.chat.completions.create(
+                        model=model_b,
+                        messages=[{"role": "user", "content": question}]
+                    ).choices[0].message.content.strip()
 
                 st.markdown(f"**🔶 Réponse de {model_b} :**\n\n{response_b}")
 else:
