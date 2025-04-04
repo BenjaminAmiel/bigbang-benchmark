@@ -19,15 +19,17 @@ question = st.text_area("💬 Entre une question à poser aux deux modèles")
 
 if st.button("Comparer les réponses") and question:
     with st.spinner("Génération des réponses..."):
-        response_1 = client.chat.completions.create(
+        completion_1 = client.chat.completions.create(
             model=model_1,
             messages=[{"role": "user", "content": question}]
-        ).choices[0].message.content.strip()
+        )
+        response_1 = completion_1.choices[0].message.content.strip()
 
-        response_2 = client.chat.completions.create(
+        completion_2 = client.chat.completions.create(
             model=model_2,
             messages=[{"role": "user", "content": question}]
-        ).choices[0].message.content.strip()
+        )
+        response_2 = completion_2.choices[0].message.content.strip()
 
     st.markdown("----")
     st.markdown(f"### 🔹 Réponse de **{model_1}**")
