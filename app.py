@@ -1,41 +1,29 @@
 import streamlit as st
 import json
-import pandas as pd
 import os
+import pandas as pd
 
-st.set_page_config(page_title="Big Bang Benchmark ✨", layout="centered")
+# 🔍 Chargement sécurisé du fichier depuis la racine
+file_path = os.path.join(os.path.dirname(__file__), "..", "evaluation_results.json")
 
-st.title("Explore les résultats de l’évaluation de ton modèle ✨")
+st.title("🌌 Big Bang Benchmark – Résultats du modèle")
 
-# Nouvelle méthode pour récupérer les paramètres (remplace experimental_get_query_params)
-query_params = st.query_params
+if not os.path.exists(file_path):
+    st.error("Aucun fichier de résultats trouvé (evaluation_results.json manquant).")
+    st.stop()
 
-api_key = st.text_input("🔑 OpenAI API Key", type="password")
-if api_key:
-    st.success("Clé chargée avec succès ✅")
+with open(file_path) as f:
+    results = json.load(f)
 
-    # Choix du modèle (dans la version actuelle, uniquement pour affichage)
-    model = st.selectbox("🤖 Choisir le modèle OpenAI", ["gpt-3.5-turbo", "gpt-4"])
+df = pd.DataFrame(results)
 
-    # Charger les résultats depuis le fichier JSON
-    results_path = "../evaluation_results.json"
-    if os.path.exists(results_path):
-        with open(results_path) as f:
-            data = json.load(f)
+st.success(f"{len(df)} questions évaluées")
+st.dataframe(df[["question", "expected", "response", "correct", "similarity"]])
 
-        df = pd.DataFrame(data)
-        st.subheader("📊 Résultats du benchmark")
-        st.dataframe(df[["question", "expected", "response", "correct"]])
+total = len(df)
+correct = df["correct"].sum()
+accuracy = round(correct / total * 100, 2)
+st.markdown(f"### ✅ Exactitude : {accuracy}% ({correct} / {total})")
 
-        correct_count = df["correct"].sum()
-        total = len(df)
-        accuracy = (correct_count / total) * 100
-
-        st.metric(label="🎯 Précision globale", value=f"{accuracy:.2f}%", delta=f"{correct_count}/{total} correctes")
-
-        with st.expander("📂 Voir tous les résultats bruts"):
-            st.json(data, expanded=False)
-    else:
-        st.warning("Aucun fichier de résultats trouvé (evaluation_results.json manquant).")
-else:
-    st.info("Veuillez saisir votre clé API OpenAI pour continuer.")
+if st.checkbox("🔍 Voir uniquement les erreurs"):
+    st.dataframe(df[df["correct"] == False])
