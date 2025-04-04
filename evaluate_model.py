@@ -13,11 +13,23 @@ def evaluate():
     with open("dataset.json") as f:
         dataset = json.load(f)
 
+    # Charger les résultats existants s'ils existent
     results = []
+    existing_questions = set()
+    if os.path.exists("evaluation_results.json"):
+        with open("evaluation_results.json") as f:
+            results = json.load(f)
+            existing_questions = {item["question"] for item in results}
+
     for item in dataset:
         question = item["question"]
         expected = normalize_text(item["expected"])
 
+        if question in existing_questions:
+            print(f"⏩ Question déjà évaluée : {question}")
+            continue
+
+        print(f"💬 Évaluation de : {question}")
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": question}]
@@ -46,10 +58,11 @@ def evaluate():
             "similarity": similarity_score
         })
 
+    # Sauvegarder tous les résultats (anciens + nouveaux)
     with open("evaluation_results.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    print("✅ Benchmark terminé. Résultats enregistrés dans evaluation_results.json.")
+    print("✅ Mise à jour des résultats terminée.")
 
 if __name__ == "__main__":
     evaluate()
