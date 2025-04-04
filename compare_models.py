@@ -1,18 +1,14 @@
 import streamlit as st
-import openai
-import os
+from openai import OpenAI
 
 st.set_page_config(page_title="Comparateur de modèles Big Bang", layout="centered")
 
 st.title("🤖 Comparateur de modèles OpenAI")
 
-# Remplacement de st.experimental_get_query_params
-query_params = st.query_params
-
 api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
 if api_key:
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     st.success("Clé API chargée avec succès ✅")
 
     model_1 = st.selectbox("🔹 Modèle 1", ["gpt-3.5-turbo", "gpt-4"])
@@ -25,11 +21,11 @@ if api_key:
             st.warning("Veuillez entrer une question.")
         else:
             with st.spinner("Envoi aux modèles..."):
-                response_1 = openai.ChatCompletion.create(
+                response_1 = client.chat.completions.create(
                     model=model_1,
                     messages=[{"role": "user", "content": question}]
                 )
-                response_2 = openai.ChatCompletion.create(
+                response_2 = client.chat.completions.create(
                     model=model_2,
                     messages=[{"role": "user", "content": question}]
                 )
