@@ -1,55 +1,46 @@
 import streamlit as st
-import json
+import openai
 import os
-from openai import OpenAI
 
-st.set_page_config(page_title="Big Bang Benchmark – Compare Models", layout="wide")
+st.set_page_config(page_title="Comparateur de modèles Big Bang", layout="centered")
 
-st.title("🧠 Big Bang Benchmark – Compare Two Models")
+st.title("🤖 Comparateur de modèles OpenAI")
 
-# API key input
+# Remplacement de st.experimental_get_query_params
+query_params = st.query_params
+
 api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
 if api_key:
+    openai.api_key = api_key
     st.success("Clé API chargée avec succès ✅")
-    client = OpenAI(api_key=api_key)
 
-    # Model selectors
-    col1, col2 = st.columns(2)
-    with col1:
-        model_a = st.selectbox("🤖 Modèle A", ["gpt-3.5-turbo", "gpt-4"])
-    with col2:
-        model_b = st.selectbox("🤖 Modèle B", ["gpt-3.5-turbo", "gpt-4"], index=1)
+    model_1 = st.selectbox("🔹 Modèle 1", ["gpt-3.5-turbo", "gpt-4"])
+    model_2 = st.selectbox("🔸 Modèle 2", ["gpt-3.5-turbo", "gpt-4"])
 
-    # Load dataset.json (nouvelle base de données)
-    if os.path.exists("dataset.json"):
-        with open("dataset.json") as f:
-            dataset = json.load(f)
+    question = st.text_area("💬 Entre une question à poser aux deux modèles")
 
-        st.subheader("📊 Comparaison des réponses")
+    if st.button("Comparer les modèles"):
+        if question.strip() == "":
+            st.warning("Veuillez entrer une question.")
+        else:
+            with st.spinner("Envoi aux modèles..."):
+                response_1 = openai.ChatCompletion.create(
+                    model=model_1,
+                    messages=[{"role": "user", "content": question}]
+                )
+                response_2 = openai.ChatCompletion.create(
+                    model=model_2,
+                    messages=[{"role": "user", "content": question}]
+                )
 
-        for i, item in enumerate(dataset):
-            question = item['question']
-            col1, col2 = st.columns(2)
+                answer_1 = response_1.choices[0].message.content.strip()
+                answer_2 = response_2.choices[0].message.content.strip()
 
-            with col1:
-                with st.spinner(f"Modèle A ({model_a}) en cours…"):
-                    response_a = client.chat.completions.create(
-                        model=model_a,
-                        messages=[{"role": "user", "content": question}]
-                    ).choices[0].message.content.strip()
+            st.subheader("🔹 Réponse du Modèle 1")
+            st.code(answer_1)
 
-                st.markdown(f"### 🧠 Question {i+1}")
-                st.markdown(f"**❓ Question :** {question}")
-                st.markdown(f"**🔷 Réponse de {model_a} :**\n\n{response_a}")
-
-            with col2:
-                with st.spinner(f"Modèle B ({model_b}) en cours…"):
-                    response_b = client.chat.completions.create(
-                        model=model_b,
-                        messages=[{"role": "user", "content": question}]
-                    ).choices[0].message.content.strip()
-
-                st.markdown(f"**🔶 Réponse de {model_b} :**\n\n{response_b}")
+            st.subheader("🔸 Réponse du Modèle 2")
+            st.code(answer_2)
 else:
-    st.info("Veuillez entrer votre clé API pour démarrer.")
+    st.info("Veuillez entrer votre clé OpenAI pour activer la comparaison.")
