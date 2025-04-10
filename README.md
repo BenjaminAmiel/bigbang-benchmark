@@ -38,3 +38,4 @@ streamlit run compare_models.py
 
 **→ Lire le chapitre 1 : Le témoignage fondateur de la création de Big Bang, vécu de l’intérieur par son auteur.**  
 [`chapitre_1.md`](./chapitre_1.md)
+> Voir aussi : [LISIÈRE — Interface Vivante](LISIERE.md)
