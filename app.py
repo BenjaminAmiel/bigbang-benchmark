@@ -22,11 +22,11 @@ else:
         st.markdown(f"❓ **{item.get('question', 'Question non disponible')}**")
         st.markdown(f"✅ **Réponse attendue :** {item.get('expected', 'Non spécifiée')}")
         st.markdown(f"💬 **Réponse du modèle :** {item.get('response', 'Aucune réponse')}")
-        if 'is_correct' in item:
-            st.markdown(f"✔️ **Correct :** {item['is_correct']}")
+        if 'correct' in item:
+            st.markdown(f"✔️ **Correct :** {item['correct']}")
         else:
             st.markdown("✔️ **Correct :** Donnée non disponible")
-        if 'similarity' in item:
+        if item.get('similarity') is not None:
             st.markdown(f"📊 **Similarité :** {item['similarity']:.4f}")
         else:
             st.markdown("📊 **Similarité :** Donnée non disponible")
